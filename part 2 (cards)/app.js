@@ -5,30 +5,43 @@ const BASE_URL = "http://deckofcardsapi.com/api/deck";
 let DECK_ID;
 
 
-async function consoleCard(){
+function consoleCard(card){
     //shuffle deck
-    DECK_ID = await shuffleDeck();
+    const cardVal = card.value;
+    const cardSuit = card.suit;
+
+    console.log("cardVal", cardVal, "cardSuit", cardSuit);
+
     console.log("deck id: ", DECK_ID);
-
-    //draw a card from the shuffled deck
-    drawOneCard(DECK_ID);
-
 }
 
 async function shuffleDeck(){
     const resp = await axios.get(`${BASE_URL}/new/shuffle/?deck_count=1`);
+    DECK_ID = resp.data.deck_id;
+    //DECK_ID =getNewDeck()
 
-    const deckId = resp.data.deck_id;
-
-    return deckId;
+    //return deckId;
 }
 
-async function drawOneCard(deckId){
-    const resp = await axios.get(`${BASE_URL}/${deckId}/draw/?count=1`);
+async function drawOneCard(){
+    const resp = await axios.get(`${BASE_URL}/${DECK_ID}/draw/?count=1`);
 
-    const cardVal = resp.data.cards[0].value;
-    const cardSuit = resp.data.cards[0].suit;
+    // const cardVal = resp.data.cards[0].value;
+    // const cardSuit = resp.data.cards[0].suit;
 
-    console.log(`${cardVal} of ${cardSuit}`);
-
+    return resp.data.cards[0];
 }
+
+function addCardHTML(card){
+    $("#cards").append(`<img src=${card.image}>`);
+}
+
+async function addCard(){
+    card = await drawOneCard();
+    consoleCard(card);
+    addCardHTML(card);
+}
+
+shuffleDeck();
+
+$("#draw-card").on("click", addCard);
