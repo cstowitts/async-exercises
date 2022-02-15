@@ -11,8 +11,6 @@ async function luckyNumFact(num){
     console.log(resp.data.text);
     // $results.text(`${resp.data.text}`);
 
-
-
     //can also use :
     let $luckyNumFact = $(`<p>${resp.data.text}</p>`);
     console.log("$luckyNumFact", $luckyNumFact);
@@ -37,6 +35,7 @@ async function getManyNumFacts(num){
     const factPromise3 = axios.get(`${NUMS_API_BASE}/${num}?json`);
     const factPromise4 = axios.get(`${NUMS_API_BASE}/${num}?json`);
 
+    console.log("fact promise 1", factPromise1);
     const facts = [
         await factPromise1,
         await factPromise2,
@@ -48,4 +47,5 @@ async function getManyNumFacts(num){
     for(let fact of facts){
         $results.append(`<p>${fact.data.text}</p>`);
     }
+
 }
